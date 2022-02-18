@@ -27,17 +27,19 @@ axiosInstance.interceptors.response.use(
 
 const mapOperator = (operator: CrudOperators) => {
     switch (operator) {
+        case "eq":
+            return "";
         case "nin":
-            return "notIn";
+            return "[$notIn]";
         case "ncontains":
-            return "notContains";
+            return "[$notContains]";
         case "containss":
-            return "containsi";
+            return "[$containsi]";
         case "ncontainss":
-            return "notContainsi";
+            return "[$notContainsi]";
+        default:
+            return `[$${operator}]`;
     }
-
-    return operator;
 };
 
 const generateSort = (sort?: CrudSorting) => {
@@ -54,19 +56,28 @@ const generateSort = (sort?: CrudSorting) => {
     return _sort;
 };
 
+const generateRelatedFields = (field: string) => {
+    const fieldArray = field.split(".").map((ele: string) => {
+        return `[${ele}]`;
+    });
+
+    return fieldArray;
+};
+
 const generateFilter = (filters?: CrudFilters) => {
     let rawQuery = "";
 
     if (filters) {
         filters.map(({ field, operator, value }) => {
             const mapedOperator = mapOperator(operator);
+            const fields = generateRelatedFields(field);
 
             if (Array.isArray(value)) {
                 value.map((val: string) => {
-                    rawQuery += `&filters${field}[$${mapedOperator}]=${val}`;
+                    rawQuery += `&filters${fields}${mapedOperator}=${val}`;
                 });
             } else {
-                rawQuery += `&filters[${field}][$${mapedOperator}]=${value}`;
+                rawQuery += `&filters${fields}${mapedOperator}=${value}`;
             }
         });
     }

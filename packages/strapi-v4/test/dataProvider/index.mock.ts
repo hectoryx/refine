@@ -399,7 +399,7 @@ nock("http://localhost:1337", { encodedQueryParams: true })
     .query({
         "pagination%5Bpage%5D": "1",
         "pagination%5BpageSize%5D": "10",
-        "filters%5Btitle%5D%5B%24eq%5D": "foo",
+        "filters%5Btitle%5D": "foo",
     })
     .reply(
         200,
@@ -483,7 +483,7 @@ nock("http://localhost:1337", { encodedQueryParams: true })
         "pagination%5Bpage%5D": "1",
         "pagination%5BpageSize%5D": "10",
         sort: "id%3Adesc",
-        "filters%5Btitle%5D%5B%24eq%5D": "foo",
+        "filters%5Btitle%5D": "foo",
     })
     .reply(
         200,
@@ -1527,7 +1527,7 @@ nock("http://localhost:1337", { encodedQueryParams: true })
 
 nock("http://localhost:1337", { encodedQueryParams: true })
     .get("/api/posts")
-    .query({ "filters%5Btitle%5D%5B%24eq%5D": "foo" })
+    .query({ "filters%5Btitle%5D": "foo" })
     .reply(
         200,
         {
